@@ -54,6 +54,7 @@ public class MaintenanceDefectController {
 
         @GetMapping("/active-list")
         public ResponseEntity<ApiResponse<?>> getAllActiveDefects() {
+
                 List<MaintenanceDefectMaster> list = defectService.getAllValidDefects();
                 ApiResponse<List<MaintenanceDefectMaster>> response =
                         new ApiResponse<>(
