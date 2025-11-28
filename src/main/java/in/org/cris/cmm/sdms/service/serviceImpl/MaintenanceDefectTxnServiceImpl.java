@@ -19,7 +19,7 @@ public class MaintenanceDefectTxnServiceImpl implements MaintenanceDefectTxnServ
         private final MaintenanceDetailsRepository detailsRepo;
         private final MaintenanceDefectRepository defectRepo;
         private final MaintenanceActionRepository actionRepo;
-        private final MaintenanceChecklistRepository checklistRepo;
+        private final MaintenanceChecklistTxnRepository checklistRepo;
         private final AuthenticationFacade authenticationFacade;
 
         @Override
@@ -75,9 +75,7 @@ public class MaintenanceDefectTxnServiceImpl implements MaintenanceDefectTxnServ
         @Override
         public String delete(Long id) {
 
-                MaintenanceDefectTxn entity = repository.findById(id)
-                        .orElseThrow(() -> new RuntimeException("Defect Txn not found: " + id));
-
+                MaintenanceDefectTxn entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Defect Txn not found: " + id));
                 entity.setValidFlag(false);
                 entity.setUpdatedAt(new Date());
                 entity.setUpdatedBy(authenticationFacade.getLoggedInUser().getUser_name());

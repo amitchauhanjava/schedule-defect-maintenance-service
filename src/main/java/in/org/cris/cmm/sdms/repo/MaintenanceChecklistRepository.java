@@ -1,6 +1,7 @@
 package in.org.cris.cmm.sdms.repo;
 
 import in.org.cris.cmm.sdms.entity.MaintenanceChecklistMaster;
+import in.org.cris.cmm.sdms.entity.MaintenanceChecklistTxn;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
