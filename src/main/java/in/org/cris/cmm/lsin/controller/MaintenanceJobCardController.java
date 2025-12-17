@@ -6,11 +6,14 @@ import in.org.cris.cmm.lsin.dto.MaintenanceJobCardDTO;
 import in.org.cris.cmm.lsin.entity.MaintenanceJobCard;
 import in.org.cris.cmm.lsin.service.MaintenanceJobCardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/maintenance-job-card")
@@ -56,6 +59,30 @@ public class MaintenanceJobCardController {
                                 HttpStatus.OK.value(),
                                 "Successful"
                         );
+
+                return ResponseEntity.ok(response);
+        }
+
+        @GetMapping("/pending")
+        public ResponseEntity<Map<String, Object>> getPendingJobCards(
+                @RequestParam String loginLevel,
+                @RequestParam String loginCode,
+                @RequestParam(required = false, defaultValue = "") String search,
+                @RequestParam(defaultValue = "0") int page,
+                @RequestParam(defaultValue = "10") int size,
+                @RequestParam(defaultValue = "id") String sortBy,
+                @RequestParam(defaultValue = "desc") String direction
+        ) {
+
+                Page<MaintenanceJobCard> result = service.getJobCardWithFilters(loginLevel, loginCode, search, page, size, sortBy, direction);
+
+                Map<String, Object> response = new HashMap<>();
+                response.put("status", "SUCCESS");
+                response.put("message", "Pending Job Cards fetched successfully");
+                response.put("currentPage", result.getNumber());
+                response.put("totalPages", result.getTotalPages());
+                response.put("totalItems", result.getTotalElements());
+                response.put("items", result.getContent());
 
                 return ResponseEntity.ok(response);
         }

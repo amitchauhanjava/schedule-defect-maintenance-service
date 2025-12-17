@@ -15,4 +15,6 @@ public interface MaintenanceChecklistService {
         List<MaintenanceChecklistMaster> getAllValidChecklistItems();
 
         String copyChecklistItems(CopyChecklistRequestDTO requestDTO);
+
+        List<MaintenanceChecklistMaster> getChecklist(Long rsTypeMaintenanceId,String coachKind,String utilityType);
 }

@@ -30,8 +30,7 @@ public class MaintenanceChecklistServiceImpl implements MaintenanceChecklistServ
 
                 if (dto.getChecklistId() != null) {
                         // Update existing
-                        entity = checklistRepository.findById(dto.getChecklistId())
-                                .orElseThrow(() -> new RuntimeException("Checklist not found: " + dto.getChecklistId()));
+                        entity = checklistRepository.findById(dto.getChecklistId()).orElseThrow(() -> new RuntimeException("Checklist not found: " + dto.getChecklistId()));
                         entity.setUpdatedBy(authenticationFacade.getLoggedInUser().getUser_name());
                         entity.setUpdatedAt(new Date());
                 } else {
@@ -44,8 +43,7 @@ public class MaintenanceChecklistServiceImpl implements MaintenanceChecklistServ
 
                 // RS Type Maintenance reference
                 if (dto.getRsTypeMaintenanceId() != null) {
-                        MasterRsTypeMaintenance ref = masterRsTypeMaintenanceRepository.findById(dto.getRsTypeMaintenanceId())
-                                .orElseThrow(() -> new RuntimeException("RS Type not found: " + dto.getRsTypeMaintenanceId()));
+                        MasterRsTypeMaintenance ref = masterRsTypeMaintenanceRepository.findById(dto.getRsTypeMaintenanceId()).orElseThrow(() -> new RuntimeException("RS Type not found: " + dto.getRsTypeMaintenanceId()));
                         entity.setRsTypeMaintenance(ref);
                 }
 
@@ -66,8 +64,7 @@ public class MaintenanceChecklistServiceImpl implements MaintenanceChecklistServ
 
         @Override
         public String delete(Long id) {
-                MaintenanceChecklistMaster entity = checklistRepository.findById(id)
-                        .orElseThrow(() -> new RuntimeException("Checklist not found: " + id));
+                MaintenanceChecklistMaster entity = checklistRepository.findById(id).orElseThrow(() -> new RuntimeException("Checklist not found: " + id));
 
                 entity.setValidFlag(false);
                 entity.setUpdatedBy(authenticationFacade.getLoggedInUser().getUser_name());
@@ -86,13 +83,11 @@ public class MaintenanceChecklistServiceImpl implements MaintenanceChecklistServ
         public String copyChecklistItems(CopyChecklistRequestDTO dto) {
 
                 List<MaintenanceChecklistMaster> oldRecords = checklistRepository.findByChecklistId(dto.getOldRsTypeMaintenanceId());
-
                 if (oldRecords.isEmpty()) {
                         return "No records found for Old RS Type ID = " + dto.getOldRsTypeMaintenanceId();
                 }
 
                 List<MaintenanceChecklistMaster> saveList = new ArrayList<>();
-
                 for (Long newRsTypeId : dto.getNewRsTypeMaintenanceIds()) {
                         MasterRsTypeMaintenance newRsType = masterRsTypeMaintenanceRepository.findById(newRsTypeId)
                                 .orElseThrow(() -> new RuntimeException("New RS Type not found: " + newRsTypeId));
@@ -127,4 +122,10 @@ public class MaintenanceChecklistServiceImpl implements MaintenanceChecklistServ
                 return "Copied " + saveList.size() + " checklist records from RS Type "
                         + dto.getOldRsTypeMaintenanceId() + " to New RS Types.";
         }
+
+        @Override
+        public List<MaintenanceChecklistMaster> getChecklist(Long rsTypeMaintenanceId, String coachKind, String utilityType) {
+                return checklistRepository.findByFilters(rsTypeMaintenanceId, coachKind, utilityType);
+        }
+
 }

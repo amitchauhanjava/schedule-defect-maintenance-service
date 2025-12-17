@@ -27,9 +27,7 @@ public class MaintenanceChecklistController {
 
                 MaintenanceChecklistMaster saved = checklistService.saveOrUpdate(dto);
                 int status = (dto.getChecklistId() == null) ? 201 : 200;
-                return ResponseEntity.status(status)
-                        .body(new APIsResponse<>(status, (dto.getChecklistId() == null) ? "Record created successfully" : "Record updated successfully",                                 saved
-                        ));
+                return ResponseEntity.status(status).body(new APIsResponse<>(status, (dto.getChecklistId() == null) ? "Record created successfully" : "Record updated successfully", saved));
         }
 
         @PostMapping("/delete/{id}")
@@ -45,13 +43,7 @@ public class MaintenanceChecklistController {
         @GetMapping("/active-list")
         public ResponseEntity<ApiResponse<?>> getAllActiveChecklistItems() {
                 List<MaintenanceChecklistMaster> list = checklistService.getAllValidChecklistItems();
-                ApiResponse<List<MaintenanceChecklistMaster>> response =
-                        new ApiResponse<>(
-                                list.size(),
-                                list,
-                                HttpStatus.OK.value(),
-                                "successful"
-                        );
+                ApiResponse<List<MaintenanceChecklistMaster>> response = new ApiResponse<>(list.size(),list,HttpStatus.OK.value(),"successful");
                 return ResponseEntity.ok(response);
         }
 
@@ -59,5 +51,19 @@ public class MaintenanceChecklistController {
         public ResponseEntity<?> copyChecklist(@RequestBody CopyChecklistRequestDTO request) {
                 String result = checklistService.copyChecklistItems(request);
                 return ResponseEntity.ok(result);
+        }
+
+        @GetMapping("/filter-list")
+        public ResponseEntity<?> getChecklist(@RequestParam(required = false) Long rsTypeMaintenanceIdId, @RequestParam(required = false) String coachKind, @RequestParam(required = false) String utilityType) {
+
+                var data = checklistService.getChecklist(rsTypeMaintenanceIdId, coachKind, utilityType);
+                return ResponseEntity.ok(
+                        Map.of(
+                                "status", HttpStatus.OK.value(),
+                                "message", "Maintenance checklist fetched successfully",
+                                "totalRecords", data.size(),
+                                "data", data
+                        )
+                );
         }
 }

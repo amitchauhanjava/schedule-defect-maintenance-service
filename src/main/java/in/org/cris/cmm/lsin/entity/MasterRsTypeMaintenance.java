@@ -42,6 +42,9 @@ public class MasterRsTypeMaintenance {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "asset_type")
+    private String assetType;
+
     @Column(name = "valid_flag")
     private Boolean validFlag = true;
 

@@ -24,5 +24,7 @@ public class MaintenanceChecklistDTO {
     private String utilityType;
     private Boolean mandCondition;
     private String method;
+    private String assetType;
+    private String maintenanceType;
 }
 
