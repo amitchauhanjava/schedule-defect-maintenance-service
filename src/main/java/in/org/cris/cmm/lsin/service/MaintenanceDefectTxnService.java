@@ -12,4 +12,7 @@ public interface MaintenanceDefectTxnService {
         String delete(Long id);
 
         List<MaintenanceDefectTxn> getAllValidDefectTxns();
+
+        List<MaintenanceDefectTxn> getMaintenanceDefects(Long defectTxnId, Long maintenanceId, Long defectId, Long actionId, Long checklistTxnId);
+
 }

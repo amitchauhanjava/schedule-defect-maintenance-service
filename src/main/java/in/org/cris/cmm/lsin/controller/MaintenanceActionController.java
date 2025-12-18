@@ -3,6 +3,7 @@ package in.org.cris.cmm.lsin.controller;
 import in.org.cris.cmm.lsin.dto.APIsResponse;
 import in.org.cris.cmm.lsin.dto.ApiResponse;
 import in.org.cris.cmm.lsin.dto.MaintenanceActionDTO;
+import in.org.cris.cmm.lsin.dto.MaintenanceActionResponseDTO;
 import in.org.cris.cmm.lsin.entity.MaintenanceActionMaster;
 import in.org.cris.cmm.lsin.service.MaintenanceActionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,14 @@ public class MaintenanceActionController {
                                 HttpStatus.OK.value(),
                                 "successful     "
                         );
+                return ResponseEntity.ok(response);
+        }
+
+        @GetMapping("/filter-list")
+        public ResponseEntity<ApiResponse<?>> getAllActiveActions(@RequestParam(required = false) Long rsTypeMaintenanceId) {
+
+                List<MaintenanceActionResponseDTO> list = maintenanceActionService.getAllValidActions(rsTypeMaintenanceId);
+                ApiResponse<List<MaintenanceActionResponseDTO>> response = new ApiResponse<>(list.size(), list, HttpStatus.OK.value(), "successful");
                 return ResponseEntity.ok(response);
         }
 }

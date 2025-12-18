@@ -2,6 +2,7 @@ package in.org.cris.cmm.lsin.service.serviceImpl;
 
 import in.org.cris.cmm.lsin.config.AuthenticationFacade;
 import in.org.cris.cmm.lsin.dto.MaintenanceActionDTO;
+import in.org.cris.cmm.lsin.dto.MaintenanceActionResponseDTO;
 import in.org.cris.cmm.lsin.entity.MaintenanceActionMaster;
 import in.org.cris.cmm.lsin.entity.MasterRsTypeMaintenance;
 import in.org.cris.cmm.lsin.repo.MaintenanceActionRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -60,5 +62,18 @@ public class MaintenanceActionServiceImpl implements MaintenanceActionService {
         @Override
         public List<MaintenanceActionMaster> getAllValidActions() {
                 return maintenanceActionRepository.findByValidFlagTrueOrderByActionIdAsc();
+        }
+
+        @Override
+        public List<MaintenanceActionResponseDTO> getAllValidActions(Long rsTypeMaintenanceId) {
+                List<MaintenanceActionMaster> actions = maintenanceActionRepository.findActiveActions(rsTypeMaintenanceId);
+
+                return actions.stream().map(a -> {
+                        MaintenanceActionResponseDTO dto = new MaintenanceActionResponseDTO();
+                        dto.setAction_id(a.getActionId());
+                        dto.setAction_code(a.getActionCode());
+                        dto.setAction_description(a.getActionDescription());
+                        return dto;
+                }).collect(Collectors.toList());
         }
 }

@@ -88,4 +88,10 @@ public class MaintenanceDefectTxnServiceImpl implements MaintenanceDefectTxnServ
         public List<MaintenanceDefectTxn> getAllValidDefectTxns() {
                 return repository.findByValidFlagTrueOrderByDefectTxnIdAsc();
         }
+
+        @Override
+        public List<MaintenanceDefectTxn> getMaintenanceDefects(Long defectTxnId, Long maintenanceId, Long defectId, Long actionId, Long checklistTxnId) {
+                return repository.searchAll(defectTxnId, maintenanceId, defectId, actionId, checklistTxnId);
+        }
+
 }

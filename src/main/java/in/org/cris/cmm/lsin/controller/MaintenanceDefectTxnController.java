@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/maintenance-defect-txn")
@@ -61,4 +62,20 @@ public class MaintenanceDefectTxnController {
 
                 return ResponseEntity.ok(response);
         }
+
+        @GetMapping("/filter-list")
+        public ResponseEntity<ApiResponse<?>> getMaintenanceDefects(
+                @RequestParam(required = false) Long defectTxnId,
+                @RequestParam(required = false) Long maintenanceId,
+                @RequestParam(required = false) Long defectId,
+                @RequestParam(required = false) Long actionId,
+                @RequestParam(required = false) Long checklistTxnId) {
+
+                List<MaintenanceDefectTxn> list = service.getMaintenanceDefects(defectTxnId, maintenanceId, defectId, actionId, checklistTxnId);
+                ApiResponse<List<MaintenanceDefectTxn>> response = new ApiResponse<>(list.size(), list, HttpStatus.OK.value(), "Successful");
+
+                return ResponseEntity.ok(response);
+        }
+
+
 }

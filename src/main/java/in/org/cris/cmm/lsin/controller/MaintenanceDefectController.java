@@ -3,6 +3,7 @@ package in.org.cris.cmm.lsin.controller;
 import in.org.cris.cmm.lsin.dto.APIsResponse;
 import in.org.cris.cmm.lsin.dto.ApiResponse;
 import in.org.cris.cmm.lsin.dto.MaintenanceDefectDTO;
+import in.org.cris.cmm.lsin.dto.MaintenanceDefectResponseDTO;
 import in.org.cris.cmm.lsin.entity.MaintenanceDefectMaster;
 import in.org.cris.cmm.lsin.service.MaintenanceDefectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,4 +64,20 @@ public class MaintenanceDefectController {
                         );
                 return ResponseEntity.ok(response);
         }
+
+        @GetMapping("/filter-list")
+        public ResponseEntity<ApiResponse<?>> getAllActiveDefects(@RequestParam(required = false) Long rsTypeMaintenanceId) {
+
+                List<MaintenanceDefectResponseDTO> list = defectService.getDefects(rsTypeMaintenanceId);
+                ApiResponse<List<MaintenanceDefectResponseDTO>> response =
+                        new ApiResponse<>(
+                                list.size(),
+                                list,
+                                HttpStatus.OK.value(),
+                                "successful"
+                        );
+
+                return ResponseEntity.ok(response);
+        }
+
 }

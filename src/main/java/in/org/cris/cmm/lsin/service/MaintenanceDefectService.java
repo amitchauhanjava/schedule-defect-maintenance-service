@@ -1,6 +1,7 @@
 package in.org.cris.cmm.lsin.service;
 
 import in.org.cris.cmm.lsin.dto.MaintenanceDefectDTO;
+import in.org.cris.cmm.lsin.dto.MaintenanceDefectResponseDTO;
 import in.org.cris.cmm.lsin.entity.MaintenanceDefectMaster;
 
 import java.util.List;
@@ -13,4 +14,5 @@ public interface MaintenanceDefectService {
 
         String delete(Long defectId);
 
+        List<MaintenanceDefectResponseDTO> getDefects(Long rsTypeMaintenanceId);
 }

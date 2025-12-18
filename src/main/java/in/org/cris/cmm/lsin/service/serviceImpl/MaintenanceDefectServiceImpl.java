@@ -2,6 +2,7 @@ package in.org.cris.cmm.lsin.service.serviceImpl;
 
 import in.org.cris.cmm.lsin.config.AuthenticationFacade;
 import in.org.cris.cmm.lsin.dto.MaintenanceDefectDTO;
+import in.org.cris.cmm.lsin.dto.MaintenanceDefectResponseDTO;
 import in.org.cris.cmm.lsin.entity.MaintenanceDefectMaster;
 import in.org.cris.cmm.lsin.entity.MasterRsTypeMaintenance;
 import in.org.cris.cmm.lsin.repo.MaintenanceDefectRepository;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -70,5 +72,20 @@ public class MaintenanceDefectServiceImpl implements MaintenanceDefectService {
         @Override
         public List<MaintenanceDefectMaster> getAllValidDefects() {
                 return defectRepository.findByValidFlagTrueOrderByDefectIdAsc();
+        }
+
+        @Override
+        public List<MaintenanceDefectResponseDTO> getDefects(Long rsTypeMaintenanceId) {
+
+                List<MaintenanceDefectMaster> entities = defectRepository.findDefects(rsTypeMaintenanceId);
+
+                return entities.stream().map(d -> {
+                        MaintenanceDefectResponseDTO dto = new MaintenanceDefectResponseDTO();
+                        dto.setDefect_id(d.getDefectId());
+                        dto.setDefect_code(d.getDefectCode());
+                        dto.setDefect_description(d.getDefectDescription());
+                        dto.setSeverity(d.getSeverity());
+                        return dto;
+                }).collect(Collectors.toList());
         }
 }
