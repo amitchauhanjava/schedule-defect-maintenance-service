@@ -25,8 +25,8 @@ public class MustChangeMaterialAssemblyServiceImpl implements MustChangeMaterial
         private final MasterRsTypeMaintenanceRepository masterRsTypeMaintenanceRepository;
 
         @Override
-        public List<MustChangeMaterialAssemblyMaster> getAllValidMustChangeMaterials() {
-                return mustChangeMaterialAssemblyRepository.findByValidFlagTrueOrderByMustChangeIdAsc();
+        public List<MustChangeMaterialAssemblyMaster> getAllValidMustChangeMaterials(Long rsTypeMaintId) {
+                return mustChangeMaterialAssemblyRepository.findActiveByOptionalRsType(rsTypeMaintId);
         }
 
         @Override

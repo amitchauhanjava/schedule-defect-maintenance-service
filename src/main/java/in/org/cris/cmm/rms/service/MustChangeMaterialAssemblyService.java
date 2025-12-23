@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface MustChangeMaterialAssemblyService {
 
-    List<MustChangeMaterialAssemblyMaster> getAllValidMustChangeMaterials();
+    List<MustChangeMaterialAssemblyMaster> getAllValidMustChangeMaterials(Long rsTypeMaintId);
 
     MustChangeMaterialAssemblyMaster saveOrUpdate(MustChangeMaterialAssemblyDTO dto);
 

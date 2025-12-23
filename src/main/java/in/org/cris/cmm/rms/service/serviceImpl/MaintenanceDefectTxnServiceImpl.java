@@ -110,8 +110,8 @@ public class MaintenanceDefectTxnServiceImpl implements MaintenanceDefectTxnServ
                                 entity.setCreatedAt(new Date());
                                 entity.setValidFlag(true);
 
-                                entity.setMaintenanceDetails(detailsRepo.getReferenceById(dto.getMaintenanceId()));
-                                entity.setDefect(defectRepo.getReferenceById(dto.getDefectId()));
+                                if (dto.getMaintenanceId() != null) entity.setMaintenanceDetails(detailsRepo.getReferenceById(dto.getMaintenanceId()));
+                                if (dto.getDefectId() != null) entity.setDefect(defectRepo.getReferenceById(dto.getDefectId()));
                         }
 
                         // optional references
@@ -139,10 +139,10 @@ public class MaintenanceDefectTxnServiceImpl implements MaintenanceDefectTxnServ
                         // map to response DTO
                         MaintenanceDefectTxnResponseDTO res = new MaintenanceDefectTxnResponseDTO();
                         res.setDefectTxnId(saved.getDefectTxnId());
-                        res.setMaintenanceId(saved.getMaintenanceDetails().getMaintenanceId());
-                        res.setDefectId(saved.getDefect().getDefectId());
-                        res.setActionId(saved.getAction() != null ? saved.getAction().getActionId() : null);
-                        res.setChecklistTxnId(saved.getChecklistTxn() != null ? saved.getChecklistTxn().getChecklistTxnId() : null);
+                        res.setMaintenanceId(saved.getMaintenanceDetails() == null ? null : saved.getMaintenanceDetails().getMaintenanceId());
+                        res.setDefectId(saved.getDefect() == null ? null : saved.getDefect().getDefectId());
+                        res.setActionId(saved.getAction() == null ? null : saved.getAction().getActionId());
+                        res.setChecklistTxnId(saved.getChecklistTxn() == null ? null : saved.getChecklistTxn().getChecklistTxnId());
                         res.setMaterialDemandId(saved.getMaterialDemandId());
                         res.setRemarks(saved.getRemarks());
                         res.setStatus(saved.getStatus());

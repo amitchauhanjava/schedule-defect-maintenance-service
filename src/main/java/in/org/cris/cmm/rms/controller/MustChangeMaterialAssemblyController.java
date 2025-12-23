@@ -43,8 +43,8 @@ public class MustChangeMaterialAssemblyController {
 
 
         @GetMapping("/active-list")
-        public ResponseEntity<ApiResponse<?>> getAllActiveMustChangeMaterials() {
-                List<MustChangeMaterialAssemblyMaster> list = mustChangeMaterialAssemblyService.getAllValidMustChangeMaterials();
+        public ResponseEntity<ApiResponse<?>> getAllActiveMustChangeMaterials(@RequestParam Long rsTypeMaintId) {
+                List<MustChangeMaterialAssemblyMaster> list = mustChangeMaterialAssemblyService.getAllValidMustChangeMaterials(rsTypeMaintId);
                 ApiResponse<List<MustChangeMaterialAssemblyMaster>> response =
                         new ApiResponse<>(
                                 list.size(),
