@@ -1,6 +1,7 @@
 Manifest-Version: 1.0
 Main-Class: org.springframework.boot.loader.launch.JarLauncher
-Start-Class: in.org.cris.cmm.rms.ScheduleDefectAndMaintenanceApplication
+Start-Class: in.org.cris.cmm.sdms.ScheduleDefectAndMaintenanceApplicatio
+ n
 Spring-Boot-Version: 3.2.2
 Spring-Boot-Classes: BOOT-INF/classes/
 Spring-Boot-Lib: BOOT-INF/lib/
