@@ -1,5 +1,6 @@
 package in.org.cris.cmm.sdms.dto;
 
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,10 @@ public class MustChangeMaterialAssemblyDTO {
 
     private Integer frequencyDays;
     private Integer frequencyKms;
+
+    private String coachKind;
+    private String utilityType;
+    private Boolean mandCondition;
 
     private Boolean validFlag;
 }

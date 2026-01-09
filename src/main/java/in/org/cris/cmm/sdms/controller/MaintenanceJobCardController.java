@@ -48,20 +48,14 @@ public class MaintenanceJobCardController {
         }
 
         @GetMapping("/active-list")
-        public ResponseEntity<ApiResponse<?>> getAllActive() {
+        public ResponseEntity<ApiResponse<?>> getAllActive(@RequestParam(required = false) String fromDate, @RequestParam(required = false) String toDate) {
+                List<MaintenanceJobCard> list = service.getAllValidJobCards(fromDate, toDate);
 
-                List<MaintenanceJobCard> list = service.getAllValidJobCards();
-
-                ApiResponse<List<MaintenanceJobCard>> response =
-                        new ApiResponse<>(
-                                list.size(),
-                                list,
-                                HttpStatus.OK.value(),
-                                "Successful"
-                        );
-
-                return ResponseEntity.ok(response);
+                return ResponseEntity.ok(
+                        new ApiResponse<>(list.size(), list, HttpStatus.OK.value(), "Successful")
+                );
         }
+
 
         @GetMapping("/pending")
         public ResponseEntity<Map<String, Object>> getPendingJobCards(

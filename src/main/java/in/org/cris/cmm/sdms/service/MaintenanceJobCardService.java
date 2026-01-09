@@ -12,7 +12,7 @@ public interface MaintenanceJobCardService {
 
         String delete(Long id);
 
-        List<MaintenanceJobCard> getAllValidJobCards();
+        List<MaintenanceJobCard> getAllValidJobCards(String fromDate, String toDate);
 
         Page<MaintenanceJobCard> getJobCardWithFilters(String loginLevel, String loginCode, String search, int page, int size, String sortBy, String direction);
 }

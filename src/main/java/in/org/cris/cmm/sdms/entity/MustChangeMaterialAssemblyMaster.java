@@ -36,6 +36,15 @@ public class MustChangeMaterialAssemblyMaster {
         @Column(name = "frequency_kms")
         private Integer frequencyKms;
 
+        @Column(name = "coach_kind")
+        private String coachKind;
+
+        @Column(name = "utility_type")
+        private String utilityType;
+
+        @Column(name = "mand_condition")
+        private Boolean mandCondition= true;
+
         @Column(name = "valid_flag")
         private Boolean validFlag = true;
 

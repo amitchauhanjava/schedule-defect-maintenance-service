@@ -25,8 +25,8 @@ public class MustChangeMaterialAssemblyServiceImpl implements MustChangeMaterial
         private final MasterRsTypeMaintenanceRepository masterRsTypeMaintenanceRepository;
 
         @Override
-        public List<MustChangeMaterialAssemblyMaster> getAllValidMustChangeMaterials(Long rsTypeMaintId) {
-                return mustChangeMaterialAssemblyRepository.findActiveByOptionalRsType(rsTypeMaintId);
+        public List<MustChangeMaterialAssemblyMaster> getAllValidMustChangeMaterials(Long rsTypeMaintId, String coachKind, String utilityType) {
+                return mustChangeMaterialAssemblyRepository.findActiveByOptionalFilters(rsTypeMaintId, coachKind, utilityType);
         }
 
         @Override
@@ -63,6 +63,9 @@ public class MustChangeMaterialAssemblyServiceImpl implements MustChangeMaterial
                 if (dto.getDescription() != null) entity.setDescription(dto.getDescription());
                 if (dto.getFrequencyDays() != null) entity.setFrequencyDays(dto.getFrequencyDays());
                 if (dto.getFrequencyKms() != null) entity.setFrequencyKms(dto.getFrequencyKms());
+                if(dto.getCoachKind() != null) entity.setCoachKind(dto.getCoachKind());
+                if(dto.getUtilityType() != null) entity.setUtilityType(dto.getUtilityType());
+                if(dto.getMandCondition() != null) entity.setMandCondition(dto.getMandCondition());
 
                 return mustChangeMaterialAssemblyRepository.save(entity);
         }

@@ -1,5 +1,6 @@
 package in.org.cris.cmm.sdms.service.serviceImpl;
 
+import in.org.cris.cmm.sdms.config.AuthenticationFacade;
 import in.org.cris.cmm.sdms.dto.MaintenanceManpowerTxnDTO;
 import in.org.cris.cmm.sdms.entity.MaintenanceDefectTxn;
 import in.org.cris.cmm.sdms.entity.MaintenanceDetails;
@@ -19,18 +20,22 @@ import java.util.List;
 public class MaintenanceManpowerTxnServiceImpl implements MaintenanceManpowerTxnService {
 
 	private final MaintenanceManpowerTxnRepository repository;
+	private final AuthenticationFacade authenticationFacade;
 
 	@Override
-	public List<MaintenanceManpowerTxn> saveOrUpdate(List<MaintenanceManpowerTxnDTO> dtoList) {
+	public List<MaintenanceManpowerTxnDTO> saveOrUpdate(List<MaintenanceManpowerTxnDTO> dtoList) {
 
-		List<MaintenanceManpowerTxn> result = new ArrayList<>();
+		List<MaintenanceManpowerTxnDTO> result = new ArrayList<>();
+		String username = authenticationFacade.getLoggedInUser().getUser_name();
 
 		for (MaintenanceManpowerTxnDTO dto : dtoList) {
 
 			MaintenanceManpowerTxn entity;
 
 			if (dto.getManpowerTxnId() != null) {
-				entity = repository.findById(dto.getManpowerTxnId()).orElseThrow(() -> new RuntimeException("Record not found"));
+				// UPDATE
+				entity = repository.findById(dto.getManpowerTxnId())
+						.orElseThrow(() -> new RuntimeException("Record not found"));
 
 				if (dto.getCategory() != null) entity.setCategory(dto.getCategory());
 				if (dto.getManpowerName() != null) entity.setManpowerName(dto.getManpowerName());
@@ -39,19 +44,18 @@ public class MaintenanceManpowerTxnServiceImpl implements MaintenanceManpowerTxn
 				if (dto.getManpowerCost() != null) entity.setManpowerCost(dto.getManpowerCost());
 
 				if (dto.getMaintenanceId() != null) {
-					MaintenanceDetails maintenance = new MaintenanceDetails();
-					maintenance.setMaintenanceId(dto.getMaintenanceId());   // only ID
-					entity.setMaintenanceDetails(maintenance);
+					MaintenanceDetails m = new MaintenanceDetails();
+					m.setMaintenanceId(dto.getMaintenanceId());
+					entity.setMaintenanceDetails(m);
 				}
 
 				if (dto.getDefectTxnId() != null) {
-					MaintenanceDefectTxn defect = new MaintenanceDefectTxn();
-					defect.setDefectTxnId(dto.getDefectTxnId());
-					entity.setDefect(defect);
+					MaintenanceDefectTxn d = new MaintenanceDefectTxn();
+					d.setDefectTxnId(dto.getDefectTxnId());
+					entity.setDefect(d);
 				}
 
-
-				entity.setUpdatedBy(dto.getUser());
+				entity.setUpdatedBy(username);
 				entity.setUpdatedAt(new Date());
 
 			} else {
@@ -59,15 +63,15 @@ public class MaintenanceManpowerTxnServiceImpl implements MaintenanceManpowerTxn
 				entity = new MaintenanceManpowerTxn();
 
 				if (dto.getMaintenanceId() != null) {
-					MaintenanceDetails maintenance = new MaintenanceDetails();
-					maintenance.setMaintenanceId(dto.getMaintenanceId());   // only ID
-					entity.setMaintenanceDetails(maintenance);
+					MaintenanceDetails m = new MaintenanceDetails();
+					m.setMaintenanceId(dto.getMaintenanceId());
+					entity.setMaintenanceDetails(m);
 				}
 
 				if (dto.getDefectTxnId() != null) {
-					MaintenanceDefectTxn defect = new MaintenanceDefectTxn();
-					defect.setDefectTxnId(dto.getDefectTxnId());
-					entity.setDefect(defect);
+					MaintenanceDefectTxn d = new MaintenanceDefectTxn();
+					d.setDefectTxnId(dto.getDefectTxnId());
+					entity.setDefect(d);
 				}
 
 				entity.setCategory(dto.getCategory());
@@ -77,11 +81,36 @@ public class MaintenanceManpowerTxnServiceImpl implements MaintenanceManpowerTxn
 				entity.setManpowerCost(dto.getManpowerCost());
 
 				entity.setValidFlag(true);
-				entity.setCreatedBy(dto.getUser());
+				entity.setCreatedBy(username);
 				entity.setCreatedAt(new Date());
 			}
 
-			result.add(repository.save(entity));
+			MaintenanceManpowerTxn saved = repository.save(entity);
+
+			// 🔹 INLINE DTO CREATION (no separate method)
+			MaintenanceManpowerTxnDTO responseDto = new MaintenanceManpowerTxnDTO();
+			responseDto.setManpowerTxnId(saved.getManpowerTxnId());
+
+			if (saved.getMaintenanceDetails() != null) {
+				responseDto.setMaintenanceId(saved.getMaintenanceDetails().getMaintenanceId());
+			}
+
+			if (saved.getDefect() != null) {
+				responseDto.setDefectTxnId(saved.getDefect().getDefectTxnId());
+			}
+
+			responseDto.setCategory(saved.getCategory());
+			responseDto.setManpowerName(saved.getManpowerName());
+			responseDto.setDesignation(saved.getDesignation());
+			responseDto.setHoursSpent(saved.getHoursSpent());
+			responseDto.setManpowerCost(saved.getManpowerCost());
+
+			// user → createdBy for new, updatedBy for update
+			responseDto.setUser(
+					dto.getManpowerTxnId() == null ? saved.getCreatedBy() : saved.getUpdatedBy()
+			);
+
+			result.add(responseDto);
 		}
 
 		return result;
@@ -90,20 +119,19 @@ public class MaintenanceManpowerTxnServiceImpl implements MaintenanceManpowerTxn
 	@Override
 	public void softDelete(Long manpowerTxnId) {
 
-		MaintenanceManpowerTxn entity = repository.findById(manpowerTxnId)
-				.orElseThrow(() -> new RuntimeException("Record not found"));
+		String username = authenticationFacade.getLoggedInUser().getUser_name();
+
+		MaintenanceManpowerTxn entity = repository.findById(manpowerTxnId).orElseThrow(() -> new RuntimeException("Record not found"));
 
 		entity.setValidFlag(false);
-//		entity.setUpdatedBy(user);
+		entity.setUpdatedBy(username);
 		entity.setUpdatedAt(new Date());
 
 		repository.save(entity);
 	}
 
 	@Override
-	public List<MaintenanceManpowerTxn> getActiveList(
-			Long maintenanceId,
-			Long defectTxnId) {
+	public List<MaintenanceManpowerTxn> getActiveList(Long maintenanceId, Long defectTxnId) {
 
 		return repository.findActiveList(maintenanceId, defectTxnId);
 	}

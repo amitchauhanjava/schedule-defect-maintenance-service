@@ -22,9 +22,9 @@ public class MaintenanceManpowerTxnController {
 	}
 
 	@PostMapping("/save-or-update")
-	public ResponseEntity<ApiResponse<List<MaintenanceManpowerTxn>>> saveOrUpdate(@RequestBody List<MaintenanceManpowerTxnDTO> dtoList) {
+	public ResponseEntity<ApiResponse<List<MaintenanceManpowerTxnDTO>>> saveOrUpdate(@RequestBody List<MaintenanceManpowerTxnDTO> dtoList) {
 
-		List<MaintenanceManpowerTxn> data = service.saveOrUpdate(dtoList);
+		List<MaintenanceManpowerTxnDTO> data = service.saveOrUpdate(dtoList);
 
 		return ResponseEntity.ok(
 				new ApiResponse<>(

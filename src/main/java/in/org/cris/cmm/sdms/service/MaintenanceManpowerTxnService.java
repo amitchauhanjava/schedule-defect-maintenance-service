@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface MaintenanceManpowerTxnService {
 
-	public List<MaintenanceManpowerTxn> saveOrUpdate(List<MaintenanceManpowerTxnDTO> dtoList);
+	public List<MaintenanceManpowerTxnDTO> saveOrUpdate(List<MaintenanceManpowerTxnDTO> dtoList);
 
 	void softDelete(Long manpowerTxnId);
 

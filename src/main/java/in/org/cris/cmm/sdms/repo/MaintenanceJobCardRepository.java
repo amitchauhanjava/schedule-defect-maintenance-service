@@ -7,11 +7,24 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface MaintenanceJobCardRepository extends JpaRepository<MaintenanceJobCard, Long> {
 
-        List<MaintenanceJobCard> findByValidFlagTrueOrderByJobCardIdAsc();
+//        List<MaintenanceJobCard> findByOrgCodeAndValidFlagTrueOrderByJobCardIdAsc(String orgCode);
+
+        @Query("""
+            SELECT m
+            FROM MaintenanceJobCard m
+            WHERE m.orgCode = ?1
+              AND m.validFlag = true
+              AND m.startTime >= ?2
+              AND m.startTime <= ?3
+            ORDER BY m.jobCardId ASC
+        """)
+        List<MaintenanceJobCard> findByStartDateRange(String orgCode, Date fromDate, Date toDate);
+
 
         @Query(value = """
             WITH filter_depots AS (
@@ -25,7 +38,7 @@ public interface MaintenanceJobCardRepository extends JpaRepository<MaintenanceJ
            )
             SELECT *
                   FROM "sdms"."maintenance_job_card" mjc
-                  WHERE
+                  WHERE valid_flag = true
                       (:loginLevel = 'BOARD'
                        OR mjc.org_code IN (SELECT "depot_code" FROM filter_depots))
                    AND (CAST(mjc.job_card_id AS TEXT) ILIKE %:search%

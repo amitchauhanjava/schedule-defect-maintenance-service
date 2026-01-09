@@ -12,6 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -59,8 +62,9 @@ public class MaintenanceJobCardServiceImpl implements MaintenanceJobCardService 
         @Override
         public String delete(Long id) {
 
-                MaintenanceJobCard entity = repository.findById(id)
-                        .orElseThrow(() -> new RuntimeException("Job Card not found: " + id));
+                String depot = authenticationFacade.getLoggedInUser().getDepot();
+
+                MaintenanceJobCard entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Job Card not found: " + id));
 
                 entity.setValidFlag(false);
                 entity.setUpdatedBy(authenticationFacade.getLoggedInUser().getUser_name());
@@ -72,8 +76,44 @@ public class MaintenanceJobCardServiceImpl implements MaintenanceJobCardService 
         }
 
         @Override
-        public List<MaintenanceJobCard> getAllValidJobCards() {
-                return repository.findByValidFlagTrueOrderByJobCardIdAsc();
+        public List<MaintenanceJobCard> getAllValidJobCards(String fromDate, String toDate) {
+
+                String orgCode = authenticationFacade.getLoggedInUser().getDepot();
+
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                sdf.setLenient(false);
+
+                Date startDate;
+                Date endDate;
+
+                try {
+                        if (fromDate != null && toDate != null) {
+
+                                startDate = sdf.parse(fromDate);
+                                endDate = sdf.parse(toDate);
+
+                                // set end date to end of day
+                                Calendar cal = Calendar.getInstance();
+                                cal.setTime(endDate);
+                                cal.set(Calendar.HOUR_OF_DAY, 23);
+                                cal.set(Calendar.MINUTE, 59);
+                                cal.set(Calendar.SECOND, 59);
+                                endDate = cal.getTime();
+
+                        } else {
+                                // Default: last 1 month
+                                Calendar cal = Calendar.getInstance();
+                                endDate = new Date();
+                                cal.setTime(endDate);
+                                cal.add(Calendar.MONTH, -1);
+                                startDate = cal.getTime();
+                        }
+
+                } catch (ParseException e) {
+                        throw new IllegalArgumentException("Invalid date format. Expected dd/MM/yyyy");
+                }
+
+                return repository.findByStartDateRange(orgCode, startDate, endDate);
         }
 
         @Override

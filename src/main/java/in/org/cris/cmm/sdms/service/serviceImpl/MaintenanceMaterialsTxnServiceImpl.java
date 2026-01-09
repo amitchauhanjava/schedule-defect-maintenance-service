@@ -1,5 +1,6 @@
 package in.org.cris.cmm.sdms.service.serviceImpl;
 
+import in.org.cris.cmm.sdms.config.AuthenticationFacade;
 import in.org.cris.cmm.sdms.dto.MaintenanceMaterialsTxnDTO;
 import in.org.cris.cmm.sdms.entity.MaintenanceDefectTxn;
 import in.org.cris.cmm.sdms.entity.MaintenanceDetails;
@@ -19,12 +20,13 @@ import java.util.List;
 public class MaintenanceMaterialsTxnServiceImpl implements MaintenanceMaterialsTxnService {
 
 	private final MaintenanceMaterialsTxnRepository repository;
+	private final AuthenticationFacade authenticationFacade;
 
 	@Override
-	public List<MaintenanceMaterialsTxn> saveOrUpdate(
-			List<MaintenanceMaterialsTxnDTO> dtoList) {
+	public List<MaintenanceMaterialsTxn> saveOrUpdate(List<MaintenanceMaterialsTxnDTO> dtoList) {
 
 		List<MaintenanceMaterialsTxn> result = new ArrayList<>();
+		String username = authenticationFacade.getLoggedInUser().getUser_name();
 
 		for (MaintenanceMaterialsTxnDTO dto : dtoList) {
 
@@ -35,11 +37,8 @@ public class MaintenanceMaterialsTxnServiceImpl implements MaintenanceMaterialsT
 				entity = repository.findById(dto.getMaterialTxnId()).orElseThrow(() -> new RuntimeException("Record not found"));
 
 				if (dto.getMaterialName() != null) entity.setMaterialName(dto.getMaterialName());
-
 				if (dto.getDescription() != null) entity.setDescription(dto.getDescription());
-
 				if (dto.getQuantityUsed() != null) entity.setQuantityUsed(dto.getQuantityUsed());
-
 				if (dto.getMaterialCost() != null) entity.setMaterialCost(dto.getMaterialCost());
 
 				if (dto.getMaintenanceId() != null) {
@@ -60,7 +59,7 @@ public class MaintenanceMaterialsTxnServiceImpl implements MaintenanceMaterialsT
 					entity.setMustChange(mc);
 				}
 
-				entity.setUpdatedBy(dto.getUser());
+				entity.setUpdatedBy(username);
 				entity.setUpdatedAt(new Date());
 
 			} else {
@@ -89,7 +88,7 @@ public class MaintenanceMaterialsTxnServiceImpl implements MaintenanceMaterialsT
 				entity.setMaterialCost(dto.getMaterialCost());
 
 				entity.setValidFlag(true);
-				entity.setCreatedBy(dto.getUser());
+				entity.setCreatedBy(username);
 				entity.setCreatedAt(new Date());
 			}
 
@@ -102,10 +101,12 @@ public class MaintenanceMaterialsTxnServiceImpl implements MaintenanceMaterialsT
 	@Override
 	public void delete(Long materialTxnId) {
 
+		String username = authenticationFacade.getLoggedInUser().getUser_name();
 		MaintenanceMaterialsTxn entity = repository.findById(materialTxnId).orElseThrow(() -> new RuntimeException("Record not found"));
 
 		entity.setValidFlag(false);
 		entity.setUpdatedAt(new Date());
+		entity.setUpdatedBy(username);
 
 		repository.save(entity);
 	}
@@ -116,4 +117,3 @@ public class MaintenanceMaterialsTxnServiceImpl implements MaintenanceMaterialsT
 		return repository.findActiveList(maintenanceId, defectTxnId);
 	}
 }
-
