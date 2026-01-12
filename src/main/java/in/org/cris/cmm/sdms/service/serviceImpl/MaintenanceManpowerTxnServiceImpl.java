@@ -7,7 +7,6 @@ import in.org.cris.cmm.sdms.entity.MaintenanceDetails;
 import in.org.cris.cmm.sdms.entity.MaintenanceManpowerTxn;
 import in.org.cris.cmm.sdms.repo.MaintenanceManpowerTxnRepository;
 import in.org.cris.cmm.sdms.service.MaintenanceManpowerTxnService;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -105,11 +104,6 @@ public class MaintenanceManpowerTxnServiceImpl implements MaintenanceManpowerTxn
 			responseDto.setHoursSpent(saved.getHoursSpent());
 			responseDto.setManpowerCost(saved.getManpowerCost());
 
-			// user → createdBy for new, updatedBy for update
-			responseDto.setUser(
-					dto.getManpowerTxnId() == null ? saved.getCreatedBy() : saved.getUpdatedBy()
-			);
-
 			result.add(responseDto);
 		}
 
@@ -131,7 +125,7 @@ public class MaintenanceManpowerTxnServiceImpl implements MaintenanceManpowerTxn
 	}
 
 	@Override
-	public List<MaintenanceManpowerTxn> getActiveList(Long maintenanceId, Long defectTxnId) {
+	public List<MaintenanceManpowerTxnDTO> getActiveList(Long maintenanceId, Long defectTxnId) {
 
 		return repository.findActiveList(maintenanceId, defectTxnId);
 	}

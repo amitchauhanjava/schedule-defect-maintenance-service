@@ -1,4 +1,4 @@
-package in.org.cris.cmm.sdms.service;
+package in.org.cris.cmm.sdms.service.serviceImpl;
 
 import in.org.cris.cmm.sdms.config.AuthenticationFacade;
 import in.org.cris.cmm.sdms.dto.MaintenanceTaskListDTO;
@@ -6,6 +6,7 @@ import in.org.cris.cmm.sdms.entity.MaintenanceTaskListMaster;
 import in.org.cris.cmm.sdms.entity.MasterRsTypeMaintenance;
 import in.org.cris.cmm.sdms.repo.MaintenanceTaskListRepository;
 import in.org.cris.cmm.sdms.repo.MasterRsTypeMaintenanceRepository;
+import in.org.cris.cmm.sdms.service.MaintenanceTaskListService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

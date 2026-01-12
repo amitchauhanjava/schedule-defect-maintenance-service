@@ -6,6 +6,8 @@ import in.org.cris.cmm.sdms.dto.MaintenanceDefectTxnRequestDTO;
 import in.org.cris.cmm.sdms.dto.MaintenanceDefectTxnResponseDTO;
 import in.org.cris.cmm.sdms.entity.*;
 import in.org.cris.cmm.sdms.repo.*;
+import in.org.cris.cmm.sdms.entity.*;
+import in.org.cris.cmm.sdms.repo.*;
 import in.org.cris.cmm.sdms.service.MaintenanceDefectTxnService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
