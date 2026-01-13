@@ -2,21 +2,21 @@ package in.org.cris.cmm.sdms.service.serviceImpl;
 
 import in.org.cris.cmm.sdms.config.AuthenticationFacade;
 import in.org.cris.cmm.sdms.dto.MaintenanceJobCardDTO;
+import in.org.cris.cmm.sdms.dto.MaintenanceJobCardDashboardDTO;
+import in.org.cris.cmm.sdms.dto.MaintenanceJobCardProjection;
 import in.org.cris.cmm.sdms.entity.MaintenanceJobCard;
+import in.org.cris.cmm.sdms.entity.Rake;
 import in.org.cris.cmm.sdms.repo.MaintenanceJobCardRepository;
+import in.org.cris.cmm.sdms.repo.RakeRepository;
 import in.org.cris.cmm.sdms.service.MaintenanceJobCardService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +24,7 @@ public class MaintenanceJobCardServiceImpl implements MaintenanceJobCardService 
 
         private final MaintenanceJobCardRepository repository;
         private final AuthenticationFacade authenticationFacade;
+        private final RakeRepository rakeRepository;
 
         @Override
         public MaintenanceJobCard saveOrUpdate(MaintenanceJobCardDTO dto) {
@@ -46,7 +47,13 @@ public class MaintenanceJobCardServiceImpl implements MaintenanceJobCardService 
 
                 entity.setOrgCode(authenticationFacade.getLoggedInUser().getDepot());
                 entity.setJobNo(dto.getJobNo());
-                entity.setRakeId(dto.getRakeId());
+
+                if (dto.getRakeId() != null) {
+                        Rake rake = new Rake();
+                        rake.setId(dto.getRakeId());
+                        entity.setRake(rake);
+                }
+
                 entity.setStatus(dto.getStatus());
 
                 try {
@@ -116,8 +123,8 @@ public class MaintenanceJobCardServiceImpl implements MaintenanceJobCardService 
                 return repository.findByStartDateRange(orgCode, startDate, endDate);
         }
 
-        @Override
-        public Page<MaintenanceJobCard> getJobCardWithFilters(String loginLevel, String loginCode, String search, int page, int size, String sortBy, String direction) {
+       /* @Override
+        public Page<MaintenanceJobCardDTO> getJobCardWithFilters(String loginLevel, String loginCode, String search, int page, int size, String sortBy, String direction) {
                 Sort sort = direction.equalsIgnoreCase("asc")
                         ? Sort.by(sortBy).ascending()
                         : Sort.by(sortBy).descending();
@@ -129,5 +136,61 @@ public class MaintenanceJobCardServiceImpl implements MaintenanceJobCardService 
                 }
 
                 return repository.findJobCardWithFilters(loginLevel, loginCode, search, pageable);
+        }*/
+
+        @Override
+        public Page<MaintenanceJobCardDashboardDTO> getJobCardWithFilters(
+                String loginLevel, String loginCode, String search,
+                int page, int size, String sortBy, String direction) {
+
+                Sort sort = direction.equalsIgnoreCase("asc")
+                        ? Sort.by(sortBy).ascending()
+                        : Sort.by(sortBy).descending();
+                Pageable pageable = PageRequest.of(page, size, sort);
+
+                if (search == null || search.trim().isEmpty()) search = "";
+
+                Page<MaintenanceJobCardProjection> projections = repository.findJobCardWithFilters(
+                        loginLevel, loginCode, search, pageable);
+
+                List<Long> rakeIds = projections.stream()
+                        .map(MaintenanceJobCardProjection::getRakeId)
+                        .filter(id -> id != null)
+                        .distinct()
+                        .toList();
+
+                final Map<Long, Rake> rakeMap = !rakeIds.isEmpty()
+                        ? rakeRepository.findAllById(rakeIds)
+                        .stream()
+                        .collect(Collectors.toMap(Rake::getId, r -> r))
+                        : Collections.emptyMap();  // effectively final
+
+                // 5️⃣ Map projections to DTO
+                List<MaintenanceJobCardDashboardDTO> dtos = projections.stream().map(p -> {
+                        MaintenanceJobCardDashboardDTO dto = new MaintenanceJobCardDashboardDTO();
+                        dto.setJobCardId(p.getJobCardId());
+                        dto.setOrgCode(p.getOrgCode());
+                        dto.setJobNo(p.getJobNo());
+                        dto.setRake(p.getRakeId() != null ? rakeMap.get(p.getRakeId()) : null); // nested Rake
+                        dto.setStartTime(p.getStartTime());
+                        dto.setEndTime(p.getEndTime());
+                        dto.setStatus(p.getStatus());
+                        dto.setValidFlag(p.getValidFlag());
+                        dto.setCreatedBy(p.getCreatedBy());
+                        dto.setUpdatedBy(p.getUpdatedBy());
+                        dto.setCreatedAt(p.getCreatedAt());
+                        dto.setUpdatedAt(p.getUpdatedAt());
+                        dto.setTotalActivity(p.getTotalActivity());
+                        dto.setPendingActivity(p.getPendingActivity());
+                        return dto;
+                }).toList();
+
+                return new PageImpl<>(dtos, pageable, projections.getTotalElements());
         }
+
+
+
+
+
+
 }

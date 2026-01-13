@@ -3,6 +3,7 @@ package in.org.cris.cmm.sdms.controller;
 import in.org.cris.cmm.sdms.dto.APIsResponse;
 import in.org.cris.cmm.sdms.dto.ApiResponse;
 import in.org.cris.cmm.sdms.dto.MaintenanceJobCardDTO;
+import in.org.cris.cmm.sdms.dto.MaintenanceJobCardDashboardDTO;
 import in.org.cris.cmm.sdms.entity.MaintenanceJobCard;
 import in.org.cris.cmm.sdms.service.MaintenanceJobCardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +69,7 @@ public class MaintenanceJobCardController {
                 @RequestParam(defaultValue = "desc") String direction
         ) {
 
-                Page<MaintenanceJobCard> result = service.getJobCardWithFilters(loginLevel, loginCode, search, page, size, sortBy, direction);
+                Page<MaintenanceJobCardDashboardDTO> result = service.getJobCardWithFilters(loginLevel, loginCode, search, page, size, sortBy, direction);
 
                 Map<String, Object> response = new HashMap<>();
                 response.put("status", "SUCCESS");

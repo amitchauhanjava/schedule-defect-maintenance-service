@@ -23,8 +23,12 @@ public class MaintenanceJobCard {
         @Column(name = "job_no")
         private String jobNo;
 
-        @Column(name = "rake_id")
-        private Long rakeId;
+        /*@Column(name = "rake_id")
+        private Long rakeId;*/
+
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "rake_id", referencedColumnName = "id")
+        private Rake rake;
 
         @Column(name = "start_time")
         @Temporal(TemporalType.TIMESTAMP)
@@ -39,6 +43,12 @@ public class MaintenanceJobCard {
 
         @Column(name = "valid_flag")
         private Boolean validFlag = true;
+
+        @Transient
+        private Long totalActivity;
+
+        @Transient
+        private Long pendingActivity;
 
         @Column(name = "created_by")
         private String createdBy;

@@ -1,6 +1,7 @@
 package in.org.cris.cmm.sdms.service;
 
 import in.org.cris.cmm.sdms.dto.MaintenanceJobCardDTO;
+import in.org.cris.cmm.sdms.dto.MaintenanceJobCardDashboardDTO;
 import in.org.cris.cmm.sdms.entity.MaintenanceJobCard;
 import org.springframework.data.domain.Page;
 
@@ -14,5 +15,5 @@ public interface MaintenanceJobCardService {
 
         List<MaintenanceJobCard> getAllValidJobCards(String fromDate, String toDate);
 
-        Page<MaintenanceJobCard> getJobCardWithFilters(String loginLevel, String loginCode, String search, int page, int size, String sortBy, String direction);
+        Page<MaintenanceJobCardDashboardDTO> getJobCardWithFilters(String loginLevel, String loginCode, String search, int page, int size, String sortBy, String direction);
 }
