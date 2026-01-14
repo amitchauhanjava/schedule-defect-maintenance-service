@@ -4,8 +4,10 @@ import in.org.cris.cmm.sdms.config.AuthenticationFacade;
 import in.org.cris.cmm.sdms.dto.MaintenanceDefectDTO;
 import in.org.cris.cmm.sdms.dto.MaintenanceDefectResponseDTO;
 import in.org.cris.cmm.sdms.entity.MaintenanceDefectMaster;
+import in.org.cris.cmm.sdms.entity.MaintenanceDefectTxn;
 import in.org.cris.cmm.sdms.entity.MasterRsTypeMaintenance;
 import in.org.cris.cmm.sdms.repo.MaintenanceDefectRepository;
+import in.org.cris.cmm.sdms.repo.MaintenanceDefectTxnRepository;
 import in.org.cris.cmm.sdms.repo.MasterRsTypeMaintenanceRepository;
 import in.org.cris.cmm.sdms.service.MaintenanceDefectService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ public class MaintenanceDefectServiceImpl implements MaintenanceDefectService {
         private final MaintenanceDefectRepository defectRepository;
         private final AuthenticationFacade authenticationFacade;
         private final MasterRsTypeMaintenanceRepository rsTypeMaintenanceRepository;
+        private final MaintenanceDefectTxnRepository defectTxnRepository;
 
         @Override
         @Transactional
@@ -87,5 +90,10 @@ public class MaintenanceDefectServiceImpl implements MaintenanceDefectService {
                         dto.setSeverity(d.getSeverity());
                         return dto;
                 }).collect(Collectors.toList());
+        }
+
+        @Override
+        public List<MaintenanceDefectTxn> getDefectsByAssetId(Long assetId) {
+                return defectTxnRepository.findActiveDefectsByAssetId(assetId);
         }
 }

@@ -5,6 +5,7 @@ import in.org.cris.cmm.sdms.dto.ApiResponse;
 import in.org.cris.cmm.sdms.dto.MaintenanceDefectDTO;
 import in.org.cris.cmm.sdms.dto.MaintenanceDefectResponseDTO;
 import in.org.cris.cmm.sdms.entity.MaintenanceDefectMaster;
+import in.org.cris.cmm.sdms.entity.MaintenanceDefectTxn;
 import in.org.cris.cmm.sdms.service.MaintenanceDefectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -77,6 +78,20 @@ public class MaintenanceDefectController {
                                 "successful"
                         );
 
+                return ResponseEntity.ok(response);
+        }
+
+        @GetMapping("/defect-details")
+        public ResponseEntity<ApiResponse<?>> getDefectsByAssetId(@RequestParam Long assetId) {
+
+                List<MaintenanceDefectTxn> list = defectService.getDefectsByAssetId(assetId);
+                ApiResponse<List<MaintenanceDefectTxn>> response =
+                        new ApiResponse<>(
+                                list.size(),
+                                list,
+                                HttpStatus.OK.value(),
+                                "Maintenance defects fetched successfully"
+                        );
                 return ResponseEntity.ok(response);
         }
 

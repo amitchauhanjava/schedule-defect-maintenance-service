@@ -3,6 +3,7 @@ package in.org.cris.cmm.sdms.service;
 import in.org.cris.cmm.sdms.dto.MaintenanceDefectDTO;
 import in.org.cris.cmm.sdms.dto.MaintenanceDefectResponseDTO;
 import in.org.cris.cmm.sdms.entity.MaintenanceDefectMaster;
+import in.org.cris.cmm.sdms.entity.MaintenanceDefectTxn;
 
 import java.util.List;
 
@@ -15,4 +16,6 @@ public interface MaintenanceDefectService {
         String delete(Long defectId);
 
         List<MaintenanceDefectResponseDTO> getDefects(Long rsTypeMaintenanceId);
+
+        List<MaintenanceDefectTxn> getDefectsByAssetId(Long assetId);
 }

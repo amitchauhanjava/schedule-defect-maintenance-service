@@ -1,5 +1,6 @@
 package in.org.cris.cmm.sdms.repo;
 
+import in.org.cris.cmm.sdms.entity.MaintenanceDefectMaster;
 import in.org.cris.cmm.sdms.entity.MaintenanceDefectTxn;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -30,5 +31,17 @@ public interface MaintenanceDefectTxnRepository extends JpaRepository<Maintenanc
         );
 
         Optional<MaintenanceDefectTxn> findByDefectTxnId(Long defectTxnId);
+
+        @Query(value = """
+    SELECT md.*
+    FROM sdms.maintenance_defects md
+    WHERE md.maintenance_id IN (
+        SELECT m.maintenance_id
+        FROM sdms.maintenance_details m
+        WHERE m.asset_id = :assetId
+    )
+    AND md.status <> 'Completed'
+    """, nativeQuery = true)
+        List<MaintenanceDefectTxn> findActiveDefectsByAssetId(@Param("assetId") Long assetId);
 
 }
