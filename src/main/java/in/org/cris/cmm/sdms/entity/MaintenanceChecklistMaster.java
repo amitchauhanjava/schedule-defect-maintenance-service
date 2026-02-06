@@ -51,6 +51,9 @@ public class MaintenanceChecklistMaster {
         @Column(name = "method")
         private String method;
 
+        @Column(name = "org_code")
+        private String orgCode;
+
         @Column(name = "valid_flag")
         private Boolean validFlag = true;
 
@@ -66,4 +69,3 @@ public class MaintenanceChecklistMaster {
         @Column(name = "updated_at")
         private Date updatedAt;
 }
-

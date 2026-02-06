@@ -103,7 +103,14 @@ public class MaintenanceChecklistTxnServiceImpl implements MaintenanceChecklistT
                                 entity.setCreatedBy(user);
                                 entity.setCreatedAt(new Date());
                                 entity.setValidFlag(true);
-                                dto.setMaintenanceId(entity.getMaintenanceDetails() != null ? entity.getMaintenanceDetails().getMaintenanceId() : null);
+
+                                if (dto.getMaintenanceId() != null) {
+                                        MaintenanceDetails details = new MaintenanceDetails();
+                                        details.setMaintenanceId(dto.getMaintenanceId());
+                                        entity.setMaintenanceDetails(details);
+                                }
+
+//                                dto.setMaintenanceId(entity.getMaintenanceDetails() != null ? entity.getMaintenanceDetails().getMaintenanceId() : null);
                                 entity.setChecklistMaster(checklistRepo.getReferenceById(dto.getChecklistId()));
                         }
                         if (dto.getPreValue() != null) entity.setPreValue(dto.getPreValue());

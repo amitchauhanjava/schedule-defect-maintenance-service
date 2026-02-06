@@ -66,4 +66,18 @@ public class MaintenanceChecklistController {
                         )
                 );
         }
+
+        @GetMapping("/assemblies")
+        public ResponseEntity<ApiResponse<List<String>>> getAssemblies() {
+
+                List<String> assemblies = checklistService.getAssemblies();
+
+                ApiResponse<List<String>> response = new ApiResponse<>();
+                response.setData(assemblies);
+                response.setRecordCount(assemblies.size());
+                response.setStatus(HttpStatus.OK.value());
+                response.setMessage("Assemblies retrieved successfully");
+
+                return ResponseEntity.ok(response);
+        }
 }

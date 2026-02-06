@@ -3,6 +3,7 @@ package in.org.cris.cmm.sdms.repo;
 import in.org.cris.cmm.sdms.entity.MaintenanceChecklistMaster;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,5 +23,13 @@ public interface MaintenanceChecklistRepository extends JpaRepository<Maintenanc
             AND (?3 IS NULL OR m.utilityType = ?3)
         """)
         List<MaintenanceChecklistMaster> findByFilters(Long rsTypeMaintenanceId, String coachKind, String utilityType);
+
+        @Query("""
+                SELECT DISTINCT mcm.assembly
+                FROM MaintenanceChecklistMaster mcm
+                WHERE mcm.orgCode IS NULL
+                   OR mcm.orgCode = :orgCode
+            """)
+        List<String> findDistinctAssemblies(@Param("orgCode") String orgCode);
 
 }

@@ -26,6 +26,8 @@ public class MaintenanceChecklistServiceImpl implements MaintenanceChecklistServ
         @Override
         public MaintenanceChecklistMaster saveOrUpdate(MaintenanceChecklistDTO dto) {
 
+                String orgCode = authenticationFacade.getLoggedInUser().getDepot();
+
                 MaintenanceChecklistMaster entity;
 
                 if (dto.getChecklistId() != null) {
@@ -38,6 +40,7 @@ public class MaintenanceChecklistServiceImpl implements MaintenanceChecklistServ
                         entity = new MaintenanceChecklistMaster();
                         entity.setValidFlag(true);
                         entity.setCreatedBy(authenticationFacade.getLoggedInUser().getUser_name());
+                        entity.setOrgCode(orgCode);
                         entity.setCreatedAt(new Date());
                 }
 
@@ -126,6 +129,10 @@ public class MaintenanceChecklistServiceImpl implements MaintenanceChecklistServ
         @Override
         public List<MaintenanceChecklistMaster> getChecklist(Long rsTypeMaintenanceId, String coachKind, String utilityType) {
                 return checklistRepository.findByFilters(rsTypeMaintenanceId, coachKind, utilityType);
+        }
+
+        public List<String> getAssemblies() {
+                return checklistRepository.findDistinctAssemblies(authenticationFacade.getLoggedInUser().getDepot());
         }
 
 }
