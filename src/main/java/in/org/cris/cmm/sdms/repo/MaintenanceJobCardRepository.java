@@ -126,7 +126,7 @@ public interface MaintenanceJobCardRepository extends JpaRepository<MaintenanceJ
         FROM sdms.maintenance_job_card mjc
         LEFT JOIN sdms.job_card_activity jca
                ON jca.job_card_id = mjc.job_card_id
-        WHERE mjc.valid_flag = TRUE
+        WHERE mjc.valid_flag = TRUE AND mjc.status IN ('PENDING','IN_PROGRESS')
           AND (
                 :loginLevel = 'BOARD'
                 OR mjc.org_code IN (SELECT fd.depot_code FROM filter_depots fd)
@@ -139,7 +139,7 @@ public interface MaintenanceJobCardRepository extends JpaRepository<MaintenanceJ
               )
         GROUP BY
             mjc.job_card_id,
-            mjc.rake_id,      -- <-- include in GROUP BY
+            mjc.rake_id, 
             mjc.org_code,
             mjc.job_no,
             mjc.start_time,

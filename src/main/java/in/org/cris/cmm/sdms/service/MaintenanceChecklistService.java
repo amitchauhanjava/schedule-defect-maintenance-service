@@ -16,7 +16,7 @@ public interface MaintenanceChecklistService {
 
         String copyChecklistItems(CopyChecklistRequestDTO requestDTO);
 
-        List<MaintenanceChecklistMaster> getChecklist(Long rsTypeMaintenanceId,String coachKind,String utilityType);
+        List<MaintenanceChecklistMaster> getChecklist(Long rsTypeMaintenanceId,String coachKind,String utilityType, String orgCode);
 
         List<String> getAssemblies();
 }

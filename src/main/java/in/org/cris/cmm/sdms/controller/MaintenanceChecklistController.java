@@ -54,9 +54,9 @@ public class MaintenanceChecklistController {
         }
 
         @GetMapping("/filter-list")
-        public ResponseEntity<?> getChecklist(@RequestParam(required = false) Long rsTypeMaintenanceId, @RequestParam(required = false) String coachKind, @RequestParam(required = false) String utilityType) {
+        public ResponseEntity<?> getChecklist(@RequestParam(required = false) Long rsTypeMaintenanceId, @RequestParam(required = false) String coachKind, @RequestParam(required = false) String utilityType, @RequestParam(required = false) String orgCode) {
 
-                var data = checklistService.getChecklist(rsTypeMaintenanceId, coachKind, utilityType);
+                var data = checklistService.getChecklist(rsTypeMaintenanceId, coachKind, utilityType, orgCode);
                 return ResponseEntity.ok(
                         Map.of(
                                 "status", HttpStatus.OK.value(),

@@ -119,20 +119,18 @@ public class MaintenanceChecklistServiceImpl implements MaintenanceChecklistServ
                                 saveList.add(copy);
                         }
                 }
-
                 checklistRepository.saveAll(saveList);
-
-                return "Copied " + saveList.size() + " checklist records from RS Type "
-                        + dto.getOldRsTypeMaintenanceId() + " to New RS Types.";
+                return "Copied " + saveList.size() + " checklist records from RS Type " + dto.getOldRsTypeMaintenanceId() + " to New RS Types.";
         }
 
         @Override
-        public List<MaintenanceChecklistMaster> getChecklist(Long rsTypeMaintenanceId, String coachKind, String utilityType) {
-                return checklistRepository.findByFilters(rsTypeMaintenanceId, coachKind, utilityType);
+        public List<MaintenanceChecklistMaster> getChecklist(Long rsTypeMaintenanceId, String coachKind, String utilityType, String orgCode) {
+
+                String userOrgCode = (orgCode != null && !orgCode.trim().isEmpty()) ? orgCode : authenticationFacade.getLoggedInUser().getDepot();
+                return checklistRepository.findByFilters(rsTypeMaintenanceId, coachKind, utilityType, userOrgCode);
         }
 
         public List<String> getAssemblies() {
                 return checklistRepository.findDistinctAssemblies(authenticationFacade.getLoggedInUser().getDepot());
         }
-
 }

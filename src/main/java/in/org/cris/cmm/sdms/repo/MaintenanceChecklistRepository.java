@@ -21,8 +21,12 @@ public interface MaintenanceChecklistRepository extends JpaRepository<Maintenanc
             AND (?1 IS NULL OR m.rsTypeMaintenance.rsTypeMaintenanceId = ?1)
             AND (?2 IS NULL OR m.coachKind = ?2)
             AND (?3 IS NULL OR m.utilityType = ?3)
+            AND (
+              m.orgCode IS NULL
+              OR m.orgCode = ?4
+            )
         """)
-        List<MaintenanceChecklistMaster> findByFilters(Long rsTypeMaintenanceId, String coachKind, String utilityType);
+        List<MaintenanceChecklistMaster> findByFilters(Long rsTypeMaintenanceId, String coachKind, String utilityType, String orgCode);
 
         @Query("""
                 SELECT DISTINCT mcm.assembly
