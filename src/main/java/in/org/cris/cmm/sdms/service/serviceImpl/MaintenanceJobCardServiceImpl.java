@@ -6,6 +6,7 @@ import in.org.cris.cmm.sdms.dto.MaintenanceJobCardDashboardDTO;
 import in.org.cris.cmm.sdms.dto.MaintenanceJobCardProjection;
 import in.org.cris.cmm.sdms.entity.MaintenanceJobCard;
 import in.org.cris.cmm.sdms.entity.Rake;
+import in.org.cris.cmm.sdms.repo.JobCardActivityRepository;
 import in.org.cris.cmm.sdms.repo.MaintenanceJobCardRepository;
 import in.org.cris.cmm.sdms.repo.RakeRepository;
 import in.org.cris.cmm.sdms.service.MaintenanceJobCardService;
@@ -25,6 +26,7 @@ public class MaintenanceJobCardServiceImpl implements MaintenanceJobCardService 
         private final MaintenanceJobCardRepository repository;
         private final AuthenticationFacade authenticationFacade;
         private final RakeRepository rakeRepository;
+        private final JobCardActivityRepository jobCardActivityRepository;
 
         @Override
         public MaintenanceJobCard saveOrUpdate(MaintenanceJobCardDTO dto) {
@@ -120,7 +122,18 @@ public class MaintenanceJobCardServiceImpl implements MaintenanceJobCardService 
                         throw new IllegalArgumentException("Invalid date format. Expected dd/MM/yyyy");
                 }
 
-                return repository.findByStartDateRange(orgCode, startDate, endDate);
+                List<MaintenanceJobCard> response = repository.findByStartDateRange(orgCode, startDate, endDate);
+
+                for (MaintenanceJobCard jobCard : response) {
+
+                        Long total = jobCardActivityRepository.countByJobCard_JobCardId(jobCard.getJobCardId());
+                        Long pending = jobCardActivityRepository.countByJobCard_JobCardIdAndStatus(jobCard.getJobCardId(),"PENDING");
+
+                        jobCard.setTotalActivity(total != null ? total : 0L);
+                        jobCard.setPendingActivity(pending != null ? pending : 0L);
+                }
+
+                return response;
         }
 
        /* @Override

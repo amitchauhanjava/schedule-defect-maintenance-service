@@ -36,8 +36,8 @@ public class JobCardActivityController {
         }
 
         @GetMapping("/active-list")
-        public ResponseEntity<ApiResponse<?>> getAllActive() {
-                List<JobCardActivity> list = service.getAllActivities();
+        public ResponseEntity<ApiResponse<?>> getAllActive(@RequestParam (required = false) Long jobCardId) {
+                List<JobCardActivity> list = service.getAllActivities(jobCardId);
                 ApiResponse<List<JobCardActivity>> response = new ApiResponse<>(list.size(),
                                 list,
                                 HttpStatus.OK.value(),

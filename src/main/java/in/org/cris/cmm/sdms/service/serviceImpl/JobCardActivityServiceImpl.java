@@ -82,7 +82,7 @@ public class JobCardActivityServiceImpl implements JobCardActivityService {
         }
 
         @Override
-        public List<JobCardActivity> getAllActivities() {
-                return repository.findAllByOrderByActivityIdAsc();
+        public List<JobCardActivity> getAllActivities(Long jobCardId) {
+                return repository.findByJobCard_JobCardIdOrderByActivityIdAsc(jobCardId);
         }
 }

@@ -11,5 +11,5 @@ public interface JobCardActivityService {
 
         String delete(Long id);
 
-        List<JobCardActivity> getAllActivities();
+        List<JobCardActivity> getAllActivities(Long jobCardId);
 }

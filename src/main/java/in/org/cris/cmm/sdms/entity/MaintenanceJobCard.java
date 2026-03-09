@@ -35,11 +35,10 @@ public class MaintenanceJobCard {
         private Date startTime;
 
         @Column(name = "end_time")
-        @Temporal(TemporalType.TIMESTAMP)
         private Date endTime;
 
         @Column(name = "status")
-        private String status = "PENDING";
+        private String status;
 
         @Column(name = "valid_flag")
         private Boolean validFlag = true;
