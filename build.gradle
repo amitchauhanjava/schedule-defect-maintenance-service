@@ -9,8 +9,8 @@ java {
     sourceCompatibility = '17'
 }
 group = 'org.cris.cmm'
-//version = '0.0.1-SNAPSHOT'
-version = 'vt211'
+version = '0.0.1-SNAPSHOT'
+//version = 'vt211'
 
 
 

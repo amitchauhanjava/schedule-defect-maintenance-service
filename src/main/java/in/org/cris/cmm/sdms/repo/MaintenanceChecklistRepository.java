@@ -33,6 +33,8 @@ public interface MaintenanceChecklistRepository extends JpaRepository<Maintenanc
                 FROM MaintenanceChecklistMaster mcm
                 WHERE mcm.orgCode IS NULL
                    OR mcm.orgCode = :orgCode
+                   AND mcm.validFlag = true
+                   ORDER BY mcm.assembly asc
             """)
         List<String> findDistinctAssemblies(@Param("orgCode") String orgCode);
 
