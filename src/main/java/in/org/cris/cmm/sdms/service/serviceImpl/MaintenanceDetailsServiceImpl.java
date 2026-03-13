@@ -10,6 +10,7 @@ import in.org.cris.cmm.sdms.service.MaintenanceDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -74,5 +75,53 @@ public class MaintenanceDetailsServiceImpl implements MaintenanceDetailsService 
 
                 repository.save(entity);
                 return "Record deleted successfully";
+        }
+
+        @Override
+        public String save(List<MaintenanceDetailsDTO> dtos) {
+
+                List<MaintenanceDetails> list = new ArrayList<>();
+
+                for (MaintenanceDetailsDTO dto : dtos) {
+
+                        MaintenanceDetails entity = new MaintenanceDetails();
+
+                        if (dto.getAssetId() != null)
+                                entity.setAssetId(dto.getAssetId());
+
+                        if (dto.getMaintenanceType() != null)
+                                entity.setMaintenanceType(dto.getMaintenanceType());
+
+                        if (dto.getLocationId() != null)
+                                entity.setLocationId(dto.getLocationId());
+
+                        if (dto.getStatus() != null)
+                                entity.setStatus(dto.getStatus());
+
+                        if (dto.getRemarks() != null)
+                                entity.setRemarks(dto.getRemarks());
+
+                        if (dto.getStartDate() != null)
+                                entity.setStartDate(dto.getStartDate());
+
+                        if (dto.getEndDate() != null)
+                                entity.setEndDate(dto.getEndDate());
+
+                        if (dto.getRsTypeMaintenanceId() != null) {
+                                MasterRsTypeMaintenance ref = rsTypeRepo.findById(dto.getRsTypeMaintenanceId())
+                                        .orElseThrow(() -> new RuntimeException("RS type not found"));
+                                entity.setRsTypeMaintenance(ref);
+                        }
+
+                        entity.setValidFlag(true);
+                        entity.setCreatedBy(authenticationFacade.getLoggedInUser().getUser_name());
+                        entity.setCreatedAt(new Date());
+
+                        list.add(entity);
+                }
+
+                repository.saveAll(list);
+
+                return "Records Save Successfully.";
         }
 }

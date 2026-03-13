@@ -54,4 +54,17 @@ public class MaintenanceDetailsController {
 
                 return ResponseEntity.ok(response);
         }
+
+        @PostMapping("/save")
+        public ResponseEntity<String> save(@RequestBody List<MaintenanceDetailsDTO> dtos) {
+
+                String savedList = service.save(dtos);
+
+                if (savedList != null && !savedList.isEmpty()) {
+                        return ResponseEntity.ok("Maintenance details saved successfully");
+                } else {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                .body("Failed to save maintenance details");
+                }
+        }
 }

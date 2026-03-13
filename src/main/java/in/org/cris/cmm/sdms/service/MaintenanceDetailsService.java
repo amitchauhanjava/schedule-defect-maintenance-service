@@ -12,4 +12,6 @@ public interface MaintenanceDetailsService {
         String delete(Long id);
 
         List<MaintenanceDetails> getAllValidMaintenanceDetails();
+
+        String save(List<MaintenanceDetailsDTO> dtos);
 }
