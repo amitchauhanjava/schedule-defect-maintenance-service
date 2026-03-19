@@ -21,6 +21,8 @@ public class MaintenanceDetailsDTO {
         private Date startDate;
         private Date endDate;
 
+        private Long  examConsistId;
+
         private Long locationId;
         private String workOrderNo;
         private String status;
