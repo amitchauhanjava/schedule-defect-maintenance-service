@@ -131,6 +131,9 @@ public class MaintenanceJobCardServiceImpl implements MaintenanceJobCardService 
 
                         jobCard.setTotalActivity(total != null ? total : 0L);
                         jobCard.setPendingActivity(pending != null ? pending : 0L);
+
+                        List<Long> sectionIds = jobCardActivityRepository.findDistinctSectionIdsByJobCardId(jobCard.getJobCardId());
+                        jobCard.setSection(sectionIds);
                 }
 
                 return response;

@@ -3,6 +3,7 @@ package in.org.cris.cmm.sdms.controller;
 import in.org.cris.cmm.sdms.dto.APIsResponse;
 import in.org.cris.cmm.sdms.dto.ApiResponse;
 import in.org.cris.cmm.sdms.dto.MaintenanceDetailsDTO;
+import in.org.cris.cmm.sdms.dto.MaintenanceProjection;
 import in.org.cris.cmm.sdms.entity.MaintenanceDetails;
 import in.org.cris.cmm.sdms.service.MaintenanceDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,5 +67,21 @@ public class MaintenanceDetailsController {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                 .body("Failed to save maintenance details");
                 }
+        }
+
+        @GetMapping("/last30days")
+        public ResponseEntity<?> getMaintenanceData() {
+
+                List<MaintenanceProjection> data = service.getMaintenanceData();
+
+                ApiResponse<List<MaintenanceProjection>> response =
+                        new ApiResponse<>(
+                                data.size(),
+                                data,
+                                200,
+                                "Maintenance data fetched successfully"
+                        );
+
+                return ResponseEntity.ok(response);
         }
 }

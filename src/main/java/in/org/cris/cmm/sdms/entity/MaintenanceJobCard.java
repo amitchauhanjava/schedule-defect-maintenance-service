@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import jakarta.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -48,6 +49,9 @@ public class MaintenanceJobCard {
 
         @Transient
         private Long pendingActivity;
+
+        @Transient
+        private List<Long> section;
 
         @Column(name = "created_by")
         private String createdBy;

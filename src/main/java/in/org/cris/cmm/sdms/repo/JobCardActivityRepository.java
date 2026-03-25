@@ -15,4 +15,6 @@ public interface JobCardActivityRepository extends JpaRepository<JobCardActivity
 
         Long countByJobCard_JobCardIdAndStatus(Long jobCardId, String status);
 
+        @Query("SELECT DISTINCT j.sectionId FROM JobCardActivity j WHERE j.jobCard.jobCardId = :jobCardId")
+        List<Long> findDistinctSectionIdsByJobCardId(@Param("jobCardId") Long jobCardId);
 }

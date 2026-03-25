@@ -2,6 +2,7 @@ package in.org.cris.cmm.sdms.service.serviceImpl;
 
 import in.org.cris.cmm.sdms.config.AuthenticationFacade;
 import in.org.cris.cmm.sdms.dto.MaintenanceDetailsDTO;
+import in.org.cris.cmm.sdms.dto.MaintenanceProjection;
 import in.org.cris.cmm.sdms.entity.MaintenanceDetails;
 import in.org.cris.cmm.sdms.entity.MasterRsTypeMaintenance;
 import in.org.cris.cmm.sdms.entity.RakeExamConsist;
@@ -178,5 +179,12 @@ public class MaintenanceDetailsServiceImpl implements MaintenanceDetailsService 
                 }
 
                 return "Records Save Successfully.";
+        }
+
+        @Override
+        public List<MaintenanceProjection> getMaintenanceData() {
+
+                String depot = authenticationFacade.getLoggedInUser().getDepot();
+                return repository.getMaintenanceData(depot);
         }
 }

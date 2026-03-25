@@ -1,6 +1,7 @@
 package in.org.cris.cmm.sdms.service;
 
 import in.org.cris.cmm.sdms.dto.MaintenanceDetailsDTO;
+import in.org.cris.cmm.sdms.dto.MaintenanceProjection;
 import in.org.cris.cmm.sdms.entity.MaintenanceDetails;
 
 import java.util.List;
@@ -14,4 +15,6 @@ public interface MaintenanceDetailsService {
         List<MaintenanceDetails> getAllValidMaintenanceDetails();
 
         String save(List<MaintenanceDetailsDTO> dtos);
+
+        List<MaintenanceProjection> getMaintenanceData();
 }
