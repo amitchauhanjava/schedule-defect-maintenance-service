@@ -17,4 +17,12 @@ public interface JobCardActivityRepository extends JpaRepository<JobCardActivity
 
         @Query("SELECT DISTINCT j.sectionId FROM JobCardActivity j WHERE j.jobCard.jobCardId = :jobCardId")
         List<Long> findDistinctSectionIdsByJobCardId(@Param("jobCardId") Long jobCardId);
+
+        @Query(value = """
+            SELECT DISTINCT sec.section_name
+            FROM sdms.job_card_activity j
+            JOIN lsin.sections sec ON sec.section_id = j.section_id
+            WHERE j.job_card_id = :jobCardId
+        """, nativeQuery = true)
+        List<String> findDistinctSectionNamesByJobCardId(@Param("jobCardId") Long jobCardId);
 }

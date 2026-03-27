@@ -51,7 +51,10 @@ public class MaintenanceJobCard {
         private Long pendingActivity;
 
         @Transient
-        private List<Long> section;
+        private List<Long> sectionIds;
+
+        @Transient
+        private List<String> sectionNames;
 
         @Column(name = "created_by")
         private String createdBy;
